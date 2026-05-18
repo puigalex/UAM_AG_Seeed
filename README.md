@@ -8,6 +8,7 @@ ollama create qwen3-27b-32k -f Modelfile.qwen3-27b
 
 
 
+
 Evaluar velocidad de modelos
 Ejecuta cualquiera de los siguientes comandos para medir el rendimiento de cada modelo:
 bashollama run gemma4:e4b --verbose
