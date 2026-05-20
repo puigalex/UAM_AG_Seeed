@@ -1,0 +1,1785 @@
+<!DOCTYPE html><html lang="es" data-lt-installed="true"><head>
+
+
+
+
+<meta charset="utf-8">
+<title>IA local — El futuro de la IA sin la nube</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  /* ──────────────────────────────────────────────────────────────────────
+     TYPE / SPACING SYSTEM
+     1920 × 1080. Every size lives here; slides reference it.
+  ─────────────────────────────────────────────────────────────────────── */
+  :root {
+    --type-cover:      150px;
+    --type-mega:       220px;
+    --type-title:      72px;
+    --type-subtitle:   44px;
+    --type-lead:       38px;
+    --type-body:       30px;
+    --type-small:      26px;
+    --type-mono-lg:    32px;
+    --type-mono:       26px;
+    --type-mono-sm:    24px;
+
+    --pad-top:         110px;
+    --pad-bottom:      130px;
+    --pad-x:           120px;
+    --gap-title:       56px;
+    --gap-item:        32px;
+    --gap-block:       72px;
+
+    --c-bg:            #161a2e;      /* navy-900 */
+    --c-bg-2:          #1c2340;      /* navy-800 */
+    --c-bg-3:          #253058;      /* navy-700 */
+    --c-bg-deep:       #0d1120;      /* navy-950 */
+    --c-teal:          #1b5c6b;
+    --c-teal-2:        #14495a;
+    --c-teal-3:        #3a9db8;
+    --c-lime:          #c8e84a;
+    --c-lime-deep:     #aacb30;
+    --c-white:         #ffffff;
+    --c-off:           #f0f2f6;
+    --c-mute:          #8892a8;
+    --c-mute-2:        #4e5670;
+    --c-border:        #2e3d72;
+  }
+
+  html, body { background: #000; margin: 0; padding: 0; }
+  body { font-family: 'Space Grotesk', sans-serif; }
+
+  /* ──────────────────────────────────────────────────────────────────────
+     LIGHT THEME · overrides only the surface tokens.
+     Accents (lime, teal), the cover slide, section-starters, and the
+     closing slide intentionally keep their original treatment.
+  ─────────────────────────────────────────────────────────────────────── */
+  :root[data-theme="light"] {
+    --c-bg:        #eef0f5;   /* slide bg */
+    --c-bg-2:      #ffffff;   /* cards / elevated */
+    --c-bg-3:      #e2e6ef;
+    --c-white:     #161a2e;   /* primary text becomes dark navy */
+    --c-off:       #2a3050;   /* body text */
+    --c-mute:      #5a6376;
+    --c-mute-2:    #8c94a8;
+    --c-border:    #c8cee0;
+    --c-teal-3:    #0f5d70;   /* darker teal for text on light bg */
+    --c-lime:      #4f6c0c;   /* accessible olive for text on light bg */
+    --c-lime-deep: #3d540a;
+  }
+  :root[data-theme="light"] html,
+  :root[data-theme="light"] body { background: #c9cfde; }
+  /* dramatic slides (cover, section-starters, closing) stay dark/colored —
+     restore the vivid lime + light text tokens just inside their scope. */
+  :root[data-theme="light"] .cover,
+  :root[data-theme="light"] .section-starter,
+  :root[data-theme="light"] .closing {
+    --c-lime:      #c8e84a;
+    --c-lime-deep: #aacb30;
+    --c-white:     #ffffff;
+    --c-off:       #f0f2f6;
+    --c-mute:      #8892a8;
+    --c-mute-2:    #4e5670;
+    --c-teal-3:    #3a9db8;
+  }
+  :root[data-theme="light"] .cover,
+  :root[data-theme="light"] .section-starter { color: #ffffff; }
+  /* The dot-grid pattern is lime-tinted; bump opacity in light mode so
+     the subtle texture still reads on a light surface. */
+  :root[data-theme="light"] .slide.dotgrid::before {
+    background-image: radial-gradient(rgba(22,26,46,0.10) 1.2px, transparent 1.2px);
+  }
+  /* Cards: add a soft shadow in light mode (was border-only on dark) */
+  :root[data-theme="light"] .card {
+    box-shadow: 0 1px 0 rgba(22,26,46,0.04), 0 2px 12px rgba(22,26,46,0.05);
+  }
+
+  /* ── Theme toggle (tiny, fixed, outside slide canvas) ──────────────── */
+  .theme-toggle {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 9999;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    background: rgba(28, 35, 64, 0.78);
+    border: 1px solid #2e3d72;
+    color: #c8e84a;
+    cursor: pointer;
+    padding: 0;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: background 150ms cubic-bezier(0.2, 0, 0, 1),
+                color 150ms cubic-bezier(0.2, 0, 0, 1),
+                border-color 150ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .theme-toggle:hover { background: rgba(28, 35, 64, 0.95); border-color: #c8e84a; }
+  .theme-toggle:focus-visible { outline: 2px solid #c8e84a; outline-offset: 2px; }
+  .theme-toggle svg { width: 16px; height: 16px; display: block; }
+  .theme-toggle .sun  { display: none; }
+  .theme-toggle .moon { display: block; }
+  :root[data-theme="light"] .theme-toggle {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #d3d9e6;
+    color: #1b5c6b;
+  }
+  :root[data-theme="light"] .theme-toggle:hover { border-color: #1b5c6b; }
+  :root[data-theme="light"] .theme-toggle .sun  { display: block; }
+  :root[data-theme="light"] .theme-toggle .moon { display: none; }
+
+  /* ── Slide base ──────────────────────────────────────────────────────── */
+  .slide {
+    background: var(--c-bg);
+    color: var(--c-white);
+    padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+    overflow: hidden;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  /* a faint dot-grid that ties every dark slide to the brand */
+  .slide.dotgrid::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(200,232,74,0.06) 1.2px, transparent 1.2px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .slide > * { position: relative; z-index: 1; }
+
+  /* ── Slide chrome (top label + bottom rule) ──────────────────────────── */
+  .chrome-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: var(--type-mono);
+    color: var(--c-mute);
+    letter-spacing: 0.08em;
+    margin-bottom: var(--gap-block);
+  }
+  .chrome-top .left {
+    color: var(--c-lime);
+  }
+  .chrome-top .pulse {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .chrome-top .pulse::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background: var(--c-lime);
+    display: inline-block;
+    box-shadow: 0 0 14px rgba(200,232,74,0.6);
+  }
+
+  .chrome-foot {
+    position: absolute;
+    left: var(--pad-x);
+    right: var(--pad-x);
+    bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: 24px;
+    color: var(--c-mute-2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    z-index: 2;
+    background: var(--c-bg);
+    padding-top: 14px;
+  }
+  .chrome-foot::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -18px;
+    height: 1px;
+    background: var(--c-border);
+  }
+
+  /* ── Type helpers ────────────────────────────────────────────────────── */
+  .eyebrow {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: var(--type-mono);
+    color: var(--c-lime);
+    letter-spacing: 0.18em;
+    text-transform: lowercase;
+    margin-bottom: 36px;
+  }
+  .slide-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--type-title);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--gap-title);
+    max-width: 1500px;
+  }
+  .slide-subtitle {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--type-subtitle);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--c-off);
+    margin: 0 0 var(--gap-title);
+    max-width: 1500px;
+  }
+  .body-lead {
+    font-size: var(--type-lead);
+    line-height: 1.35;
+    color: var(--c-off);
+    font-weight: 300;
+    max-width: 1500px;
+  }
+  .body-text {
+    font-size: var(--type-body);
+    line-height: 1.45;
+    color: var(--c-off);
+    font-weight: 300;
+    max-width: 1300px;
+  }
+  .tag-mono {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: var(--type-mono);
+    color: var(--c-lime);
+    letter-spacing: 0.04em;
+  }
+  .num-lime { color: var(--c-lime); }
+  .num-teal { color: var(--c-teal-3); }
+  .accent { color: var(--c-lime); }
+
+  /* ── Bracketed brand mark ────────────────────────────────────────────── */
+  .brand-mark {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: var(--type-mono);
+    color: var(--c-lime);
+    letter-spacing: 0.06em;
+  }
+  .brand-mark::before { content: "["; color: var(--c-lime); margin-right: 4px; }
+  .brand-mark::after  { content: "]"; color: var(--c-lime); margin-left: 4px; }
+
+  /* ── Generic card ────────────────────────────────────────────────────── */
+  .card {
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-border);
+    padding: 36px 40px;
+    box-sizing: border-box;
+  }
+  .card h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--type-subtitle);
+    font-weight: 600;
+    margin: 0 0 24px;
+    line-height: 1.15;
+  }
+  .card .label-bar {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: var(--type-mono-sm);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-mute);
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .card .label-bar .dot {
+    width: 10px; height: 10px;
+    background: var(--c-lime);
+    display: inline-block;
+  }
+  .card.con .label-bar .dot { background: var(--c-warning, #f5c842); }
+
+  /* ── Section starter ─────────────────────────────────────────────────── */
+  .section-starter {
+    background: var(--c-teal-2);
+    justify-content: space-between;
+    padding: var(--pad-top) var(--pad-x);
+  }
+  .section-starter .sec-num {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: var(--type-mega);
+    color: var(--c-lime);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+  .section-starter .sec-rule {
+    height: 2px;
+    background: var(--c-lime);
+    width: 320px;
+    margin: 36px 0;
+  }
+  .section-starter .sec-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 110px;
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    max-width: 1500px;
+  }
+  .section-starter .sec-foot {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: var(--type-mono);
+    color: var(--c-teal-3);
+    letter-spacing: 0.16em;
+    text-transform: lowercase;
+  }
+
+  /* ── Bullet list (mono-style with bracket) ───────────────────────────── */
+  .b-list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--gap-item); }
+  .b-list li {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    align-items: baseline;
+    font-size: var(--type-body);
+    line-height: 1.35;
+    color: var(--c-off);
+    font-weight: 300;
+  }
+  .b-list li::before {
+    content: ">";
+    font-family: 'DejaVu Sans Mono', monospace;
+    color: var(--c-lime);
+    font-weight: 700;
+  }
+  .b-list li strong {
+    color: var(--c-white);
+    font-weight: 500;
+  }
+
+  /* dash list, lighter weight */
+  .d-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 22px; }
+  .d-list li {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    align-items: baseline;
+    font-size: var(--type-body);
+    color: var(--c-off);
+    font-weight: 300;
+    line-height: 1.4;
+  }
+  .d-list li::before {
+    content: "—";
+    color: var(--c-teal-3);
+  }
+
+  /* ── Cover ───────────────────────────────────────────────────────────── */
+  .cover {
+    background: var(--c-bg-deep);
+    padding: 0;
+    justify-content: flex-end;
+  }
+  .cover .cover-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(200,232,74,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,232,74,0.05) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at 70% 40%, black 0%, transparent 70%);
+  }
+  .cover .cover-glow {
+    position: absolute;
+    width: 1200px; height: 1200px;
+    top: -300px; right: -300px;
+    background: radial-gradient(circle, rgba(27,92,107,0.55), transparent 65%);
+    z-index: 0;
+  }
+  .cover .cover-mark {
+    position: absolute;
+    top: 90px; left: var(--pad-x);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    z-index: 2;
+  }
+  .cover .cover-mark img {
+    width: 80px;
+    height: 80px;
+  }
+  .cover .cover-mark .name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .cover .cover-mark .name .tech {
+    color: var(--c-lime);
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: 28px;
+  }
+  .cover-body {
+    padding: 0 var(--pad-x) 220px;
+    z-index: 2;
+  }
+  .cover .preamble {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: 30px;
+    color: var(--c-lime);
+    letter-spacing: 0.12em;
+    margin-bottom: 28px;
+  }
+  .cover h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 156px;
+    font-weight: 700;
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    margin: 0;
+    max-width: 1700px;
+  }
+  .cover h1 .accent { color: var(--c-lime); }
+  .cover .sub {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--c-off);
+    margin-top: 40px;
+    max-width: 1400px;
+    line-height: 1.25;
+  }
+  .cover-foot {
+    position: absolute;
+    bottom: 60px;
+    left: var(--pad-x);
+    right: var(--pad-x);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: 24px;
+    color: var(--c-mute);
+    letter-spacing: 0.1em;
+    z-index: 3;
+  }
+  .cover-foot .sponsors {
+    text-align: right;
+  }
+  .cover-foot .sponsors .l {
+    color: var(--c-mute-2);
+    text-transform: uppercase;
+    font-size: 24px;
+    letter-spacing: 0.22em;
+    margin-bottom: 12px;
+  }
+  .cover-foot .sponsors .v {
+    color: var(--c-white);
+    font-size: 28px;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+  }
+  .cover-foot .sponsors .v .sep { color: var(--c-lime); margin: 0 18px; }
+
+  /* sponsor logo plaque on the cover — single white block holding all logos
+     with vertical separators, so it reads as one intentional design element
+     instead of three loose white rectangles. */
+  .cover-foot .sponsor-plaque {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    background: #ffffff;
+    padding: 14px 28px 16px;
+    box-sizing: border-box;
+    /* lime accent stripe at the top — ties the white block to the brand */
+    border-top: 3px solid var(--c-lime);
+  }
+  .cover-foot .sponsor-plaque .plaque-label {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #4a5364;
+    margin-bottom: 12px;
+  }
+  .cover-foot .sponsor-plaque .plaque-label .br { color: var(--c-teal, #1b5c6b); }
+  .cover-foot .sponsor-logos {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .cover-foot .sponsor-logos .tile {
+    background: transparent;
+    padding: 6px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 78px;
+    box-sizing: border-box;
+    position: relative;
+  }
+  .cover-foot .sponsor-logos .tile + .tile::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 1px;
+    background: #d6dae3;
+  }
+  .cover-foot .sponsor-logos .tile img {
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: 220px;
+    object-fit: contain;
+  }
+  .cover-foot .sponsor-logos .tile.uam img   { max-width: 130px; }
+  .cover-foot .sponsor-logos .tile.ag img    { max-width: 110px; }
+  .cover-foot .sponsor-logos .tile.seeed img { max-width: 200px; }
+
+  /* ── Compare grid (Pros / Contras) ───────────────────────────────────── */
+  .pair-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    margin-top: 20px;
+  }
+  .pair-grid .card { padding: 40px 44px; min-height: 540px; }
+  .pair-grid .card .b-list li { font-size: 26px; }
+  .pair-grid .card.pro { border-left: 4px solid var(--c-lime); }
+  .pair-grid .card.con { border-left: 4px solid #f5c842; }
+
+  /* ── Three columns ───────────────────────────────────────────────────── */
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+  }
+
+  /* ── Comparison table ────────────────────────────────────────────────── */
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 26px;
+    color: var(--c-off);
+    font-weight: 300;
+  }
+  .cmp-table th, .cmp-table td {
+    text-align: left;
+    padding: 14px 26px;
+    border-bottom: 1px solid var(--c-border);
+    line-height: 1.25;
+  }
+  .cmp-table thead th {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: 24px;
+    color: var(--c-mute);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 400;
+    padding-top: 10px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--c-lime);
+  }
+  .cmp-table thead th.col-edge { color: var(--c-lime); }
+  .cmp-table thead th.col-cloud { color: var(--c-teal-3); }
+  .cmp-table td.dim { color: var(--c-mute); font-family: 'DejaVu Sans Mono', monospace; font-size: 24px; letter-spacing: 0.04em; }
+  .cmp-table td.good { color: var(--c-lime); font-weight: 500; }
+  .cmp-table td.bad  { color: var(--c-mute); }
+
+  /* ── Diagram (Cloud / Edge) ──────────────────────────────────────────── */
+  .diag {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    width: 100%;
+  }
+  .diag svg { width: 100%; height: 100%; max-height: 560px; }
+
+  /* device / product card */
+  .prod-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 12px;
+  }
+  .prod {
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-border);
+    padding: 22px 26px 26px;
+  }
+  .prod .swatch {
+    background: var(--c-bg-deep);
+    border: 1px solid var(--c-border);
+    height: 150px;
+    margin-bottom: 18px;
+    display: grid;
+    place-items: center;
+  }
+  .prod .swatch svg { width: 130px; height: 130px; }
+  .prod h5 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: var(--c-white);
+    line-height: 1.15;
+  }
+  .prod .meta {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    color: var(--c-lime);
+    margin-bottom: 14px;
+  }
+  .prod p {
+    font-size: 24px;
+    line-height: 1.35;
+    color: var(--c-off);
+    margin: 0;
+    font-weight: 300;
+  }
+
+  /* big number block */
+  .big-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .big-stat .n {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 180px;
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+  .big-stat .u {
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: var(--type-mono);
+    color: var(--c-mute);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* split layout used a lot */
+  .split-2 {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  /* use-case row */
+  .uc-row {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 64px;
+    padding: 38px 0;
+    border-bottom: 1px solid var(--c-border);
+    align-items: start;
+  }
+  .uc-row:last-child { border-bottom: 0; }
+  .uc-row h5 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 38px;
+    font-weight: 600;
+    color: var(--c-white);
+    margin: 0;
+    line-height: 1.15;
+  }
+  .uc-row h5 .num {
+    display: block;
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: 24px;
+    color: var(--c-lime);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  .uc-row .b-list li { font-size: var(--type-small); }
+
+  /* closing slide */
+  .closing {
+    background: var(--c-lime);
+    color: var(--c-bg-deep);
+  }
+  .closing h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 156px;
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin: 0;
+  }
+  .closing .lead {
+    font-size: 38px;
+    font-weight: 400;
+    line-height: 1.25;
+    margin-top: 40px;
+    max-width: 1500px;
+    color: var(--c-bg-deep);
+  }
+  .closing .foot {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-family: 'DejaVu Sans Mono', monospace;
+    font-size: 24px;
+    color: var(--c-bg-deep);
+    letter-spacing: 0.1em;
+  }
+
+</style>
+</head>
+<body style="">
+
+<!-- ── Theme toggle ─────────────────────────────────────────────────── -->
+<button class="theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema (claro/oscuro)">
+  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+  </svg>
+  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+  </svg>
+</button>
+<script>
+  (function () {
+    var root = document.documentElement;
+    var stored = null;
+    try { stored = localStorage.getItem('amp-theme'); } catch (e) {}
+    if (stored === 'light' || stored === 'dark') root.setAttribute('data-theme', stored);
+    var btn = document.querySelector('.theme-toggle');
+    if (btn) btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('amp-theme', next); } catch (e) {}
+    });
+  })();
+</script>
+
+<deck-stage width="1920" height="1080" style="--deck-rail-w: 188px;">
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 01 — COVER
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide cover">
+  <div class="cover-grid"></div>
+  <div class="cover-glow"></div>
+
+  <div class="cover-mark">
+    <img src="assets/isotipo-dark.png" alt="AMPTech isotipo">
+    <div class="name">AMP<span class="tech">[tech]</span></div>
+  </div>
+
+  <div class="cover-body">
+    <div class="preamble" style=""><br></div>
+    <h1>IA local<span class="accent">.</span><br>El futuro de la IA<br>sin la nube<span class="accent">_</span></h1>
+    <div class="sub">Cómo el procesamiento en el borde está moviendo la inteligencia artificial fuera del data center y de regreso al mundo físico.</div>
+  </div>
+
+  <div class="cover-foot">
+    <div class="left">
+      <div class="sponsor-plaque">
+        <div class="plaque-label">
+</div>
+        <div class="sponsor-logos">
+          <div class="tile uam"><img src="assets/sponsor-uam.png" alt="UAM"></div>
+          <div class="tile ag"><img src="assets/sponsor-ag.png" alt="AG Electrónica"></div>
+          <div class="tile seeed"><img src="assets/sponsor-seeed.jpg" alt="Seeed Studio"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sponsors">
+      <div class="l">
+</div>
+      <div class="v">AG Electrónica<span class="sep">·</span>Seeed Studio</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 02 — HOOK / WHY
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ introducción ]</span>
+    <span></span>
+  </div>
+
+  <div class="eyebrow">
+</div>
+  <h2 class="slide-title">La IA no solo corre en un data center.
+Ahora vive en sensores, cámaras
+y dispositivos del tamaño de una moneda.</h2>
+
+  <div class="split-2" style="margin-top:60px;">
+    <div>
+      <div class="tag-mono" style="margin-bottom:18px;">[ contexto ]</div>
+      <p class="body-lead" style="">Durante una década, "hacer IA" significó subir todo a la nube o tener hardware muy costoso. Hoy hay otra opción: procesar los datos exactamente donde se generan.</p>
+    </div>
+    <div>
+      <div class="tag-mono" style="margin-bottom:18px;">
+</div>
+      <p class="body-text">Vamos a comparar las dos arquitecturas, entender qué hace posible la IA en el borde y dónde se está usando hoy mismo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 03 — AGENDA
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left" style=""><br></span>
+    <span style=""><br></span>
+  </div>
+
+  <div class="eyebrow">qué vamos a recorrer</div>
+  <h2 class="slide-title">Cuatro capítulos.</h2>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 40px 80px; margin-top: 20px;">
+    <div class="card" style="background:var(--c-bg-2); border-left: 4px solid var(--c-lime);">
+      <div class="label-bar"><span class="dot"></span><span>01 / arquitectura</span></div>
+      <h4>Arquitectura Nube</h4>
+      <p class="body-text" style="font-size:26px; margin:0;">Cómo funciona, qué resuelve y dónde empieza a fallar.</p>
+    </div>
+    <div class="card" style="background:var(--c-bg-2); border-left: 4px solid var(--c-lime);">
+      <div class="label-bar"><span class="dot"></span><span>02 / borde</span></div>
+      <h4>Cómputo en el Borde</h4>
+      <p class="body-text" style="font-size:26px; margin:0;">Qué es, qué implica y por qué importa ahora.</p>
+    </div>
+    <div class="card" style="background:var(--c-bg-2); border-left: 4px solid var(--c-lime);">
+      <div class="label-bar"><span class="dot"></span><span>03 / cómo</span></div>
+      <h4>Lo que lo hace posible</h4>
+      <p class="body-text" style="font-size:26px; margin:0;">Hardware especializado y trucos de software para modelos compactos.</p>
+    </div>
+    <div class="card" style="background:var(--c-bg-2); border-left: 4px solid var(--c-lime);">
+      <div class="label-bar"><span class="dot"></span><span>04 / dónde</span></div>
+      <h4>Casos de Uso</h4>
+      <p class="body-text" style="font-size:26px; margin:0;">Industria, espacios inteligentes y hogares.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 04 — SECTION 01
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide section-starter">
+  <div>
+    <div class="sec-foot"></div>
+    <div class="sec-num">01</div>
+  </div>
+  <div>
+    <div class="sec-rule"></div>
+    <div class="sec-name">Arquitectura Nube.</div>
+    <p class="body-lead" style="margin-top: 40px; color: var(--c-teal-200); max-width: 1300px;">El modelo dominante durante la última década. Entendamos cómo funciona y dónde empieza a romperse.</p>
+  </div>
+  <div class="sec-foot" style="display:flex; justify-content:space-between;">
+    <span></span>
+    <span>03 / 21</span>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 05 — DIAGRAM: COMO FUNCIONA LA NUBE
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 01 · nube ]</span>
+    <span></span>
+  </div>
+
+  <div class="eyebrow" style="margin-bottom: 20px;">cómo funciona la nube</div>
+  <h2 class="slide-title" style="margin-bottom: 30px;">Tus datos viajan. Lejos.</h2>
+
+  <div class="diag" style="max-height: 540px;">
+    <svg viewBox="0 0 1600 620" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#3a9db8"></path>
+        </marker>
+      </defs>
+
+      <!-- ── Cloud (top center) ───────────────────────────────────── -->
+      <g transform="translate(620,30)">
+        <path d="M80,140 Q40,100 90,80 Q110,30 170,40 Q220,0 280,40 Q340,30 350,90 Q400,100 380,150 Q400,200 340,200 L110,200 Q60,200 80,140 Z" fill="#1b5c6b" stroke="#3a9db8" stroke-width="2"></path>
+        <text x="220" y="120" text-anchor="middle" fill="#c8e84a" font-family="DejaVu Sans Mono" font-size="28" letter-spacing="3">[ CLOUD ]</text>
+        <text x="220" y="158" text-anchor="middle" fill="#ffffff" font-family="Space Grotesk" font-size="26" font-weight="600">inferencia · data center</text>
+      </g>
+
+      <!-- ── Left device (origin) ─────────────────────────────────── -->
+      <g transform="translate(120,380)">
+        <rect x="0" y="0" width="260" height="180" fill="#1c2340" stroke="#2e3d72" stroke-width="2"></rect>
+        <text x="130" y="40" text-anchor="middle" fill="#8892a8" font-family="DejaVu Sans Mono" font-size="24" letter-spacing="3">[ DISPOSITIVO ]</text>
+        <!-- camera icon -->
+        <rect x="80" y="68" width="100" height="62" fill="none" stroke="#c8e84a" stroke-width="2"></rect>
+        <circle cx="130" cy="99" r="18" fill="none" stroke="#c8e84a" stroke-width="2"></circle>
+        <circle cx="130" cy="99" r="7" fill="#c8e84a"></circle>
+        <rect x="158" y="74" width="12" height="5" fill="#c8e84a"></rect>
+        <text x="130" y="158" text-anchor="middle" fill="#ffffff" font-family="Space Grotesk" font-size="26" font-weight="600">cámara · sensor</text>
+      </g>
+
+      <!-- ── Right device (response) ──────────────────────────────── -->
+      <g transform="translate(1220,380)">
+        <rect x="0" y="0" width="260" height="180" fill="#1c2340" stroke="#2e3d72" stroke-width="2"></rect>
+        <text x="130" y="40" text-anchor="middle" fill="#8892a8" font-family="DejaVu Sans Mono" font-size="24" letter-spacing="3">[ APLICACIÓN ]</text>
+        <!-- screen icon -->
+        <rect x="70" y="62" width="120" height="74" fill="none" stroke="#c8e84a" stroke-width="2"></rect>
+        <line x1="70" y1="84" x2="190" y2="84" stroke="#c8e84a" stroke-width="2"></line>
+        <circle cx="84" cy="73" r="3" fill="#c8e84a"></circle>
+        <rect x="80" y="94" width="100" height="5" fill="#c8e84a" opacity="0.7"></rect>
+        <rect x="80" y="104" width="80" height="5" fill="#c8e84a" opacity="0.45"></rect>
+        <rect x="80" y="114" width="90" height="5" fill="#c8e84a" opacity="0.45"></rect>
+        <text x="130" y="158" text-anchor="middle" fill="#ffffff" font-family="Space Grotesk" font-size="26" font-weight="600">decisión · acción</text>
+      </g>
+
+      <!-- Up arrow (device → cloud) -->
+      <path d="M 380 380 Q 540 280 720 220" stroke="#3a9db8" stroke-width="3" fill="none" marker-end="url(#arrhead)"></path>
+      <text x="470" y="200" text-anchor="middle" fill="#3a9db8" font-family="DejaVu Sans Mono" font-size="26">datos crudos  →</text>
+      <text x="470" y="232" text-anchor="middle" fill="#8892a8" font-family="DejaVu Sans Mono" font-size="24">video · audio · telemetría</text>
+
+      <!-- Down arrow (cloud → device) -->
+      <path d="M 980 220 Q 1170 280 1220 380" stroke="#3a9db8" stroke-width="3" stroke-dasharray="8 6" fill="none" marker-end="url(#arrhead)"></path>
+      <text x="1210" y="200" text-anchor="middle" fill="#3a9db8" font-family="DejaVu Sans Mono" font-size="26">←  resultado</text>
+      <text x="1210" y="232" text-anchor="middle" fill="#8892a8" font-family="DejaVu Sans Mono" font-size="24">predicción · alerta</text>
+    </svg>
+  </div>
+
+  <div style="display:flex; justify-content:center; align-items:center; gap: 24px; margin-top: 16px;">
+    <span style="font-family:'DejaVu Sans Mono'; font-size: 24px; color: #f5c842; letter-spacing: 0.08em;">
+</span>
+    <span style="font-family:'Space Grotesk'; font-size: 36px; color: #f5c842; font-weight: 600;">
+</span>
+    <span style="font-family:'DejaVu Sans Mono'; font-size: 24px; color: var(--c-mute);">depende de red, congestión y distancia al data center</span>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 06 — PROS / CONTRAS NUBE
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 01 · nube ]</span>
+    <span>
+</span>
+  </div>
+
+  <div class="eyebrow">la nube · ventajas y costos</div>
+  <h2 class="slide-title">Lo que la nube hace bien,<br>y lo que cobra a cambio.</h2>
+
+  <div class="pair-grid">
+    <div class="card pro">
+      <div class="label-bar"><span class="dot"></span><span>PROS</span></div>
+      <ul class="b-list">
+        <li><span><strong>Escalabilidad casi ilimitada.</strong> Mil dispositivos o un millón, el cómputo se rentea.</span></li>
+        <li><span><strong>Cero inversión en hardware propio.</strong> No compras servidores, no los mantienes.</span></li>
+        <li><span><strong>Acceso desde cualquier lugar.</strong> Mismo modelo entrenado, accesible desde cualquier red.</span></li>
+        <li><span><strong>Modelos enormes disponibles.</strong> LLMs y modelos de cientos de GB son sólo viables ahí.</span></li>
+      </ul>
+    </div>
+    <div class="card con">
+      <div class="label-bar"><span class="dot"></span><span>CONTRAS</span></div>
+      <ul class="b-list">
+        <li><span>Latencia. Los datos viajan al servidor y regresan cada vez.</span></li>
+        <li><span><strong>Depende de internet.</strong> Sin conexión, no hay inferencia.</span></li>
+        <li><span><strong>Privacidad y soberanía.</strong> Tu video, tu audio, tus métricas salen del edificio.</span></li>
+        <li><span>Costo recurrente. Pagas por inferencia, por ancho de banda y por almacenamiento siempre.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 07 — BIG NUMBER: LATENCIA
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 01 · nube ]</span>
+    <span></span>
+  </div>
+
+  <div class="eyebrow">el cuello de botella</div>
+  <h2 class="slide-title">Cuando la decisión tiene que ser inmediata,<br>la nube es lenta.</h2>
+
+  <div style="flex:1; display:grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; margin-top:20px; padding-bottom: 60px;">
+    <div>
+      <div class="big-stat">
+        <div class="n num-teal" style="font-size: 160px;">~250<span style="font-size:64px; color:var(--c-mute); letter-spacing:0;"> ms</span></div>
+        <div class="u">round-trip típico a la nube</div>
+      </div>
+      <div class="big-stat" style="margin-top:60px;">
+        <div class="n num-lime" style="font-size: 160px;">&lt;15<span style="font-size:64px; color:var(--c-mute); letter-spacing:0;"> ms</span></div>
+        <div class="u">inferencia en el borde</div>
+      </div>
+    </div>
+    <div>
+      <p class="body-lead" style="margin-bottom:50px;">Para una recomendación de Netflix da igual.</p>
+      <p class="body-lead" style="color:var(--c-white);">Para un brazo robótico, un coche autónomo o una alarma de seguridad, es la diferencia entre <span class="accent">reaccionar</span> y <span style="color:#f5c842;">llegar tarde</span>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 08 — SECTION 02
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide section-starter">
+  <div>
+    <div class="sec-foot"></div>
+    <div class="sec-num">02</div>
+  </div>
+  <div>
+    <div class="sec-rule"></div>
+    <div class="sec-name">Cómputo en el Borde.</div>
+    <p class="body-lead" style="margin-top:40px; color: var(--c-teal-200); max-width:1300px;">Procesar los datos cerca de donde se generan, en lugar de mandarlos a la otra parte del mundo.</p>
+  </div>
+  <div class="sec-foot" style="display:flex; justify-content:space-between;">
+    <span></span>
+    <span>07 / 21</span>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 09 — DEFINICIÓN
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 02 · borde ]</span>
+    <span></span>
+  </div>
+
+  <div class="eyebrow">qué es el cómputo en el borde</div>
+  <h2 class="slide-title" style="max-width: 1100px;">Procesar los datos<br>donde nacen.</h2>
+
+  <div style="position:absolute; top:140px; right:var(--pad-x); width:680px; background:#ffffff; border-top:3px solid var(--c-lime); padding:14px 18px; box-sizing:border-box; z-index:2;">
+    <img src="assets/seeed_edgecomputing.webp" alt="Diagrama: sensores IoT procesando datos en el borde" style="display:block; width:100%; height:auto;">
+  </div>
+
+  <p class="body-lead" style="max-width: 1100px; margin-bottom: 60px;">El <span class="accent">"borde"</span> es cualquier dispositivo local: una cámara, un sensor, un teléfono, una Raspberry Pi, NVIDIA Jetson, un microcontrolador. La inferencia ocurre ahí mismo. Los datos crudos no salen del dispositivo.</p>
+
+  <div class="three-col" style="margin-top: 20px;">
+    <div class="card" style="background:transparent; border:1px solid var(--c-border); border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom:18px;">[ donde ]</div>
+      <h4 style="font-size:36px;">En el dispositivo</h4>
+      <p style="font-size:24px; color: var(--c-off); line-height:1.4; margin:0; font-weight:300;">Cámara, sensor, teléfono, microcontrolador, gateway industrial.</p>
+    </div>
+    <div class="card" style="background:transparent; border:1px solid var(--c-border); border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom:18px;">[ qué hace ]</div>
+      <h4 style="font-size:36px;">Inferencia local</h4>
+      <p style="font-size: 24px; color: var(--c-off); line-height: 1.4; margin: 0px; font-weight: 300;">El modelo corre en el dispositivo que captura el dato o muy cercano a el.</p>
+    </div>
+    <div class="card" style="background:transparent; border:1px solid var(--c-border); border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom:18px;">[ qué evita ]</div>
+      <h4 style="font-size:36px;">El viaje a la nube</h4>
+      <p style="font-size: 24px; color: var(--c-off); line-height: 1.4; margin: 0px; font-weight: 300;">Los datos crudos nunca salen del edificio.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 10 — DIAGRAM: COMO FUNCIONA EL BORDE
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 02 · borde ]</span>
+    <span></span>
+  </div>
+
+  <div class="eyebrow">cómo funciona el borde</div>
+  <h2 class="slide-title">Captura, decisión y acción<br>ocurren en el mismo lugar.</h2>
+
+  <div class="diag">
+    <svg viewBox="0 0 1600 620" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrhead2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#c8e84a"></path>
+        </marker>
+      </defs>
+
+      <!-- Big "edge device" box containing everything -->
+      <rect x="200" y="60" width="1200" height="460" fill="#1c2340" stroke="#c8e84a" stroke-width="2" stroke-dasharray="8 6"></rect>
+      <text x="240" y="100" fill="#c8e84a" font-family="DejaVu Sans Mono" font-size="26" letter-spacing="3">[ DISPOSITIVO_EN_EL_BORDE ]</text>
+
+      <!-- Sensor -->
+      <g transform="translate(280,200)">
+        <rect x="0" y="0" width="220" height="220" fill="#0d1120" stroke="#2e3d72" stroke-width="1.5"></rect>
+        <text x="110" y="36" text-anchor="middle" fill="#8892a8" font-family="DejaVu Sans Mono" font-size="24" letter-spacing="2">[ SENSOR ]</text>
+        <!-- camera icon -->
+        <rect x="55" y="74" width="110" height="74" fill="none" stroke="#c8e84a" stroke-width="2"></rect>
+        <circle cx="110" cy="111" r="20" fill="none" stroke="#c8e84a" stroke-width="2"></circle>
+        <circle cx="110" cy="111" r="7" fill="#c8e84a"></circle>
+        <text x="110" y="188" text-anchor="middle" fill="#ffffff" font-family="Space Grotesk" font-size="26" font-weight="600">captura</text>
+      </g>
+
+      <!-- arrow -->
+      <line x1="510" y1="310" x2="660" y2="310" stroke="#c8e84a" stroke-width="3" marker-end="url(#arrhead2)"></line>
+
+      <!-- NPU / inference chip -->
+      <g transform="translate(680,200)">
+        <rect x="0" y="0" width="240" height="220" fill="#0d1120" stroke="#c8e84a" stroke-width="2"></rect>
+        <text x="120" y="36" text-anchor="middle" fill="#c8e84a" font-family="DejaVu Sans Mono" font-size="24" letter-spacing="2">[ NPU / EDGE_AI ]</text>
+        <!-- chip pattern -->
+        <rect x="60" y="68" width="120" height="100" fill="none" stroke="#c8e84a" stroke-width="2"></rect>
+        <g stroke="#c8e84a" stroke-width="1.5">
+          <line x1="50" y1="84" x2="60" y2="84"></line>
+          <line x1="50" y1="108" x2="60" y2="108"></line>
+          <line x1="50" y1="132" x2="60" y2="132"></line>
+          <line x1="50" y1="156" x2="60" y2="156"></line>
+          <line x1="180" y1="84" x2="190" y2="84"></line>
+          <line x1="180" y1="108" x2="190" y2="108"></line>
+          <line x1="180" y1="132" x2="190" y2="132"></line>
+          <line x1="180" y1="156" x2="190" y2="156"></line>
+        </g>
+        <text x="120" y="124" text-anchor="middle" fill="#c8e84a" font-family="DejaVu Sans Mono" font-size="24">~ 8 ms</text>
+        <text x="120" y="200" text-anchor="middle" fill="#ffffff" font-family="Space Grotesk" font-size="26" font-weight="600">inferencia local</text>
+      </g>
+
+      <!-- arrow -->
+      <line x1="930" y1="310" x2="1080" y2="310" stroke="#c8e84a" stroke-width="3" marker-end="url(#arrhead2)"></line>
+
+      <!-- Action -->
+      <g transform="translate(1100,200)">
+        <rect x="0" y="0" width="220" height="220" fill="#0d1120" stroke="#2e3d72" stroke-width="1.5"></rect>
+        <text x="110" y="36" text-anchor="middle" fill="#8892a8" font-family="DejaVu Sans Mono" font-size="24" letter-spacing="2">[ ACCIÓN ]</text>
+        <!-- relay/output icon -->
+        <circle cx="110" cy="110" r="40" fill="none" stroke="#c8e84a" stroke-width="2"></circle>
+        <circle cx="110" cy="110" r="18" fill="#c8e84a"></circle>
+        <text x="110" y="188" text-anchor="middle" fill="#ffffff" font-family="Space Grotesk" font-size="26" font-weight="600">decisión</text>
+      </g>
+
+      <!-- bottom timing -->
+      <line x1="280" y1="568" x2="1320" y2="568" stroke="#c8e84a" stroke-width="1" stroke-dasharray="2 6"></line>
+      <text x="800" y="600" text-anchor="middle" fill="#c8e84a" font-family="DejaVu Sans Mono" font-size="26">latencia total · &lt; 15 ms · sin internet</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 11 — TABLA COMPARATIVA NUBE vs BORDE
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 02 · borde ]</span>
+    <span></span>
+  </div>
+
+  <div class="eyebrow">lado a lado</div>
+  <h2 class="slide-title">Borde vs. Nube.</h2>
+
+  <table class="cmp-table" style="margin-top: 30px;">
+    <thead>
+      <tr>
+        <th style="width:30%;">criterio</th>
+        <th class="col-cloud" style="width:35%;">[ nube ]</th>
+        <th class="col-edge" style="width:35%;">[ borde ]</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="dim">latencia</td>
+        <td>100 – 500 ms · round-trip</td>
+        <td class="good">&lt; 15 ms · local</td>
+      </tr>
+      <tr>
+        <td class="dim">internet</td>
+        <td>obligatorio</td>
+        <td class="good">opcional · puede funcionar offline</td>
+      </tr>
+      <tr>
+        <td class="dim">privacidad</td>
+        <td>los datos crudos salen del sitio</td>
+        <td class="good">los datos crudos nunca salen</td>
+      </tr>
+      <tr>
+        <td class="dim">costo</td>
+        <td>recurrente · por inferencia y ancho de banda</td>
+        <td class="good">capex inicial · operación marginal</td>
+      </tr>
+      <tr>
+        <td class="dim">cómputo disponible</td>
+        <td class="good">prácticamente ilimitado</td>
+        <td>limitado al hardware local</td>
+      </tr>
+      <tr>
+        <td class="dim">tamaño de modelo</td>
+        <td class="good">cientos de GB · LLMs grandes</td>
+        <td>MB – pocos GB · modelos optimizados</td>
+      </tr>
+      <tr>
+        <td class="dim">resiliencia</td>
+        <td>cae si cae internet o el proveedor</td>
+        <td class="good">sigue operando aislado</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 12 — LO QUE IMPLICA
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 02 · borde ]</span>
+    <span></span>
+  </div>
+
+  <div class="eyebrow">lo que implica procesar en el borde</div>
+  <h2 class="slide-title">Cuatro consecuencias directas.</h2>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 28px 36px; margin-top: 20px; flex:1;">
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom:18px;">[ 01 / latencia ]</div>
+      <h4>Respuesta en milisegundos</h4>
+      <p style="font-size:26px; color:var(--c-off); margin:0; line-height:1.4; font-weight:300;">Sin viaje al data center. El sensor decide en tiempo real.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom:18px;">[ 02 / autonomía ]</div>
+      <h4>Funciona sin internet</h4>
+      <p style="font-size:26px; color:var(--c-off); margin:0; line-height:1.4; font-weight:300;">El sistema sigue operando si cae la red, el proveedor o el enlace WAN.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom:18px;">[ 03 / privacidad ]</div>
+      <h4>Los datos no se almacenan</h4>
+      <p style="font-size:26px; color:var(--c-off); margin:0; line-height:1.4; font-weight:300;">Si solo se requiere que el sistema detone alertas o analíticos, el dato original ni siquiera tiene que almacenarse.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid #f5c842;">
+      <div class="tag-mono" style="margin-bottom:18px; color:#f5c842;">[ 04 / trade-off ]</div>
+      <h4>Recursos limitados</h4>
+      <p style="font-size:26px; color:var(--c-off); margin:0; line-height:1.4; font-weight:300;">Memoria, cómputo y energía son escasos. Hay que optimizar los modelos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 13 — SECTION 03
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide section-starter">
+  <div>
+    <div class="sec-foot"></div>
+    <div class="sec-num">03</div>
+  </div>
+  <div>
+    <div class="sec-rule"></div>
+    <div class="sec-name">Lo que lo hace posible.</div>
+    <p class="body-lead" style="margin-top:40px; color: var(--c-teal-200); max-width:1300px;">La IA en el borde tenía demasiados retos a solucionar hace 5 años, ha habido mucha investigación que ahora permite realizar cosas antes inimaginables.</p>
+  </div>
+  <div class="sec-foot" style="display:flex; justify-content:space-between;">
+    <span>
+</span>
+    <span>12 / 21</span>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 14 — HARDWARE
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 03 · cómo ]</span>
+    <span></span>
+  </div>
+
+  <div class="eyebrow">hardware · silicio diseñado para inferencia</div>
+  <h2 class="slide-title">Chips que hacen una sola cosa,<br>y la hacen muy rápido.</h2>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 80px; flex:1; align-items: start; margin-top: 20px;">
+    <ul class="b-list">
+      <li><span><strong>NPUs y GPUs embebidas.</strong> Aceleradores neuronales del tamaño de una uña, integrados al SoC.</span></li>
+      <li><span style=""><strong>Chips dedicados a inferencia.</strong> Diseñados para multiplicar matrices.</span></li>
+      <li><span><strong>Miniaturización extrema.</strong> Módulos completos de visión por computadora del tamaño de una moneda.</span></li>
+      <li><span style=""><strong>Bajo consumo energético.</strong> De cientos de watts a decimales, pueden vivir de batería o energía solar.</span></li>
+    </ul>
+
+    <div>
+      <div class="tag-mono" style="margin-bottom: 32px;">[microcontroladores con aceleración vectorial]</div>
+      <div class="card" style="padding: 48px;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+          <div>
+            <div style="font-family: 'DejaVu Sans Mono'; font-size: 24px; color: var(--c-mute); letter-spacing: 0.12em; margin-bottom: 14px;">CONSUMO</div>
+            <div style="font-family: 'Space Grotesk'; font-size: 72px; font-weight: 700; color: var(--c-lime); line-height: 1;">~ 100<span style="font-size:32px; color:var(--c-mute);"> mW</span></div>
+          </div>
+          <div>
+            <div style="font-family: 'DejaVu Sans Mono'; font-size: 24px; color: var(--c-mute); letter-spacing: 0.12em; margin-bottom: 14px;">PRECIO</div>
+            <div style="font-family: 'Space Grotesk'; font-size: 72px; font-weight: 700; color: var(--c-lime); line-height: 1;">&lt; $20<span style="font-size:32px; color:var(--c-mute);"> USD</span></div>
+          </div>
+          <div>
+            <div style="font-family: 'DejaVu Sans Mono'; font-size: 24px; color: var(--c-mute); letter-spacing: 0.12em; margin-bottom: 14px;">RAM</div>
+            <div style="font-family: 'Space Grotesk'; font-size: 56px; font-weight: 700; color: var(--c-white); line-height: 1;">8 MB</div>
+          </div>
+          <div>
+            <div style="font-family: 'DejaVu Sans Mono'; font-size: 24px; color: var(--c-mute); letter-spacing: 0.12em; margin-bottom: 14px;">CORRE</div>
+            <div style="font-family: 'Space Grotesk'; font-size: 32px; font-weight: 500; color: var(--c-white); line-height: 1.2; padding-top: 18px;">visión, audio, anomalías</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 15 — CATÁLOGO SEEED
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 03 · cómo ]</span>
+    <span>seeed studio · ag electrónica</span>
+  </div>
+
+  <div class="eyebrow" style="margin-bottom: 18px;">ejemplo de hardware usado para despliegue en el borde</div>
+  <h2 class="slide-title" style="font-size: 52px; margin-bottom: 30px;"><br></h2>
+
+  <style>
+    .prod-tight { display:grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .prod-tight .prod {
+      background: var(--c-bg-2);
+      border: 1px solid var(--c-border);
+      border-top: 2px solid var(--c-lime);
+      padding: 20px 24px 22px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+    .prod-tight .prod .ico {
+      width: 280px; height: 220px;
+      background: var(--c-bg-deep);
+      border: 1px solid var(--c-border);
+      display: grid; place-items: center;
+    }
+    .prod-tight .prod .ico svg { width: 64px; height: 64px; }
+    .prod-tight .prod .meta {
+      font-family: 'DejaVu Sans Mono', monospace;
+      font-size: 24px;
+      letter-spacing: 0.02em;
+      color: var(--c-lime);
+      margin-bottom: 6px;
+      line-height: 1.1;
+    }
+    .prod-tight .prod h5 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 30px;
+      font-weight: 600;
+      margin: 0 0 8px;
+      color: var(--c-white);
+      line-height: 1.1;
+    }
+    .prod-tight .prod p {
+      font-size: 24px;
+      line-height: 1.3;
+      color: var(--c-off);
+      margin: 0;
+      font-weight: 300;
+    }
+  </style>
+
+  <div class="prod-tight" style="flex:1;">
+
+    <!-- XIAO ESP32S3 Sense -->
+    <div class="prod">
+      <div class="ico" style="padding: 0; overflow: hidden; background: #f4f5f7;"><img src="assets/xiao-sense.jpg" alt="XIAO ESP32-S3 Sense" style="width:100%; height:100%; object-fit: cover; display:block;"></div>
+      <div>
+        <div class="meta" style=""><br></div>
+        <h5>XIAO ESP32-S3 Sense</h5>
+        <p>Microcontrolador del tamaño de un pulgar, con cámara y micrófono. Corre visión y wake-words con TensorFlow Lite Micro.</p>
+      </div>
+    </div>
+
+    <!-- reComputer Jetson -->
+    <div class="prod">
+      <div class="ico" style="padding: 0; overflow: hidden; background: #f4f5f7;"><img src="assets/recomputer.jpg" alt="reComputer J-Series" style="width:100%; height:100%; object-fit: cover; display:block;"></div>
+      <div>
+        <div class="meta" style=""><br></div>
+        <h5>reComputer J-Series</h5>
+        <p>Mini-PC con módulo NVIDIA Jetson integrado. Visión en tiempo real, modelos de varios GB, hasta 100 TOPS en una caja sellada.</p>
+      </div>
+    </div>
+
+    <!-- Grove Vision AI V2 and SenseCAP Watcher removed per request -->
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 16 — SOFTWARE: QUANTIZATION + PRUNING
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 03 · cómo ]</span>
+    <span>software</span>
+  </div>
+
+  <div class="eyebrow">software · cómo cabe un modelo en un sensor</div>
+  <h2 class="slide-title" style="">Dos trucos hacen que el modelo no requiera correr en servidores.</h2>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 48px; flex:1; margin-top: 24px;">
+
+    <!-- Quantization -->
+    <div class="card" style="padding: 36px 40px;">
+      <div class="tag-mono" style="margin-bottom: 18px;"><br></div>
+      <h4 style="font-size: 42px; margin-bottom: 12px;">Cuantización</h4>
+      <p style="font-size: 26px; color:var(--c-off); margin: 0 0 24px; line-height:1.35; font-weight:300;">Reducir la precisión de los pesos del modelo. Menos bits → menos memoria → más rápido.</p>
+
+      <!-- visual: float32 vs int8 -->
+      <div style="background: var(--c-bg-deep); padding: 22px 26px; border: 1px solid var(--c-border);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 18px;">
+          <div>
+            <div style="font-family:'DejaVu Sans Mono'; font-size:24px; color:var(--c-mute); letter-spacing:0.12em;">FLOAT32</div>
+            <div style="font-family:'Space Grotesk'; font-size:44px; font-weight:700; color:var(--c-white); margin-top: 4px;">100 MB</div>
+          </div>
+          <div style="font-family:'DejaVu Sans Mono'; font-size:32px; color:var(--c-lime);">→</div>
+          <div style="text-align:right;">
+            <div style="font-family:'DejaVu Sans Mono'; font-size:24px; color:var(--c-lime); letter-spacing:0.12em;">INT8</div>
+            <div style="font-family:'Space Grotesk'; font-size:44px; font-weight:700; color:var(--c-lime); margin-top: 4px;">25 MB</div>
+          </div>
+        </div>
+        <!-- bars -->
+        <div style="height: 12px; background: var(--c-bg-2); position: relative;">
+          <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: var(--c-teal-3); opacity:0.4;"></div>
+        </div>
+        <div style="height: 12px; background: var(--c-bg-2); margin-top: 6px;">
+          <div style="height:100%; width:25%; background: var(--c-lime);"></div>
+        </div>
+        <div style="font-family:'DejaVu Sans Mono'; font-size:24px; color:var(--c-mute); margin-top: 14px; line-height:1.2;">4× menos memoria</div>
+      </div>
+    </div>
+
+    <!-- Pruning -->
+    <div class="card" style="padding: 30px 36px 30px;">
+      <div class="tag-mono" style="margin-bottom: 14px;"><br></div>
+      <h4 style="font-size:42px; margin-bottom: 10px;">Pruning</h4>
+      <p style="font-size: 26px; color:var(--c-off); margin: 0 0 20px; line-height:1.3; font-weight:300;">Eliminar las conexiones de la red que casi no aportan. La red se vuelve más esparcida y más liviana.</p>
+
+      <!-- visual: neural net before/after -->
+      <div style="background: var(--c-bg-deep); padding: 22px 26px; border: 1px solid var(--c-border);">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div>
+            <div style="font-family:'DejaVu Sans Mono'; font-size:24px; color:var(--c-mute); letter-spacing:0.12em; margin-bottom:12px;">ANTES</div>
+            <svg viewBox="0 0 220 200" width="100%" height="130">
+              <g stroke="#3a9db8" stroke-width="1" opacity="0.55">
+                <line x1="20" y1="30" x2="110" y2="30"></line><line x1="20" y1="30" x2="110" y2="70"></line><line x1="20" y1="30" x2="110" y2="110"></line><line x1="20" y1="30" x2="110" y2="150"></line><line x1="20" y1="30" x2="110" y2="170"></line>
+                <line x1="20" y1="70" x2="110" y2="30"></line><line x1="20" y1="70" x2="110" y2="70"></line><line x1="20" y1="70" x2="110" y2="110"></line><line x1="20" y1="70" x2="110" y2="150"></line><line x1="20" y1="70" x2="110" y2="170"></line>
+                <line x1="20" y1="110" x2="110" y2="30"></line><line x1="20" y1="110" x2="110" y2="70"></line><line x1="20" y1="110" x2="110" y2="110"></line><line x1="20" y1="110" x2="110" y2="150"></line><line x1="20" y1="110" x2="110" y2="170"></line>
+                <line x1="20" y1="150" x2="110" y2="30"></line><line x1="20" y1="150" x2="110" y2="70"></line><line x1="20" y1="150" x2="110" y2="110"></line><line x1="20" y1="150" x2="110" y2="150"></line><line x1="20" y1="150" x2="110" y2="170"></line>
+                <line x1="110" y1="30" x2="200" y2="80"></line><line x1="110" y1="30" x2="200" y2="120"></line>
+                <line x1="110" y1="70" x2="200" y2="80"></line><line x1="110" y1="70" x2="200" y2="120"></line>
+                <line x1="110" y1="110" x2="200" y2="80"></line><line x1="110" y1="110" x2="200" y2="120"></line>
+                <line x1="110" y1="150" x2="200" y2="80"></line><line x1="110" y1="150" x2="200" y2="120"></line>
+                <line x1="110" y1="170" x2="200" y2="80"></line><line x1="110" y1="170" x2="200" y2="120"></line>
+              </g>
+              <g fill="#1c2340" stroke="#3a9db8" stroke-width="1.5">
+                <circle cx="20" cy="30" r="6"></circle><circle cx="20" cy="70" r="6"></circle><circle cx="20" cy="110" r="6"></circle><circle cx="20" cy="150" r="6"></circle>
+                <circle cx="110" cy="30" r="6"></circle><circle cx="110" cy="70" r="6"></circle><circle cx="110" cy="110" r="6"></circle><circle cx="110" cy="150" r="6"></circle><circle cx="110" cy="170" r="6"></circle>
+                <circle cx="200" cy="80" r="6"></circle><circle cx="200" cy="120" r="6"></circle>
+              </g>
+            </svg>
+          </div>
+          <div>
+            <div style="font-family:'DejaVu Sans Mono'; font-size:24px; color:var(--c-lime); letter-spacing:0.12em; margin-bottom:12px;">DESPUÉS</div>
+            <svg viewBox="0 0 220 200" width="100%" height="130">
+              <g stroke="#c8e84a" stroke-width="1.4">
+                <line x1="20" y1="30" x2="110" y2="70"></line>
+                <line x1="20" y1="70" x2="110" y2="30"></line>
+                <line x1="20" y1="70" x2="110" y2="110"></line>
+                <line x1="20" y1="110" x2="110" y2="110"></line>
+                <line x1="20" y1="150" x2="110" y2="150"></line>
+                <line x1="110" y1="30" x2="200" y2="80"></line>
+                <line x1="110" y1="70" x2="200" y2="80"></line>
+                <line x1="110" y1="110" x2="200" y2="120"></line>
+                <line x1="110" y1="150" x2="200" y2="120"></line>
+              </g>
+              <g fill="#1c2340" stroke="#c8e84a" stroke-width="1.5">
+                <circle cx="20" cy="30" r="6"></circle><circle cx="20" cy="70" r="6"></circle><circle cx="20" cy="110" r="6"></circle><circle cx="20" cy="150" r="6"></circle>
+                <circle cx="110" cy="30" r="6"></circle><circle cx="110" cy="70" r="6"></circle><circle cx="110" cy="110" r="6"></circle><circle cx="110" cy="150" r="6"></circle>
+                <circle cx="200" cy="80" r="6"></circle><circle cx="200" cy="120" r="6"></circle>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div style="font-family:'DejaVu Sans Mono'; font-size:24px; color:var(--c-mute); margin-top: 14px; line-height:1.2;">
+</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 17 — MODELOS Y FRAMEWORKS
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 03 · cómo ]</span>
+    <span></span>
+  </div>
+
+  <div class="eyebrow">modelos y frameworks para el borde</div>
+  <h2 class="slide-title">El ecosistema, en dos columnas.</h2>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 80px; flex:1; margin-top: 30px;">
+    <div>
+      <div class="tag-mono" style="margin-bottom: 32px;">[ modelos compactos ]</div>
+
+      <div style="display: grid; gap: 22px;">
+        <div style="display:grid; grid-template-columns: 260px 1fr; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--c-border);">
+          <span style="font-family:'DejaVu Sans Mono'; font-size: 30px; color: var(--c-lime); letter-spacing: 0.02em;">MobileNet</span>
+          <span style="font-size: 26px; color: var(--c-off); font-weight: 300; line-height: 1.4;">visión clasificación · ligero, móvil-first.</span>
+        </div>
+        <div style="display:grid; grid-template-columns: 260px 1fr; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--c-border);">
+          <span style="font-family:'DejaVu Sans Mono'; font-size: 30px; color: var(--c-lime); letter-spacing: 0.02em;">YOLO-nano</span>
+          <span style="font-size: 26px; color: var(--c-off); font-weight: 300; line-height: 1.4;">detección de objetos en tiempo real.</span>
+        </div>
+        <div style="display:grid; grid-template-columns: 260px 1fr; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--c-border);">
+          <span style="font-family:'DejaVu Sans Mono'; font-size: 30px; color: var(--c-lime); letter-spacing: 0.02em;">TinyML</span>
+          <span style="font-size: 26px; color: var(--c-off); font-weight: 300; line-height: 1.4;">modelos para microcontroladores · KB, no MB.</span>
+        </div>
+        <div style="display:grid; grid-template-columns: 260px 1fr; align-items: baseline; padding: 22px 0;">
+          <span style="font-family:'DejaVu Sans Mono'; font-size: 30px; color: var(--c-lime); letter-spacing: 0.02em;">Whisper.cpp</span>
+          <span style="font-size: 26px; color: var(--c-off); font-weight: 300; line-height: 1.4;">speech-to-text local · sin enviar audio fuera.</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="tag-mono" style="margin-bottom: 32px;">[ frameworks de inferencia ]</div>
+
+      <div style="display: grid; gap: 22px;">
+        <div style="display:grid; grid-template-columns: 260px 1fr; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--c-border);">
+          <span style="font-family:'DejaVu Sans Mono'; font-size: 30px; color: var(--c-teal-3); letter-spacing: 0.02em;">TF Lite</span>
+          <span style="font-size: 26px; color: var(--c-off); font-weight: 300; line-height: 1.4;">el estándar de facto · móvil y embebido.</span>
+        </div>
+        <div style="display:grid; grid-template-columns: 260px 1fr; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--c-border);">
+          <span style="font-family:'DejaVu Sans Mono'; font-size: 30px; color: var(--c-teal-3); letter-spacing: 0.02em;">TF Lite Micro</span>
+          <span style="font-size: 26px; color: var(--c-off); font-weight: 300; line-height: 1.4;">para microcontroladores · sin sistema operativo.</span>
+        </div>
+        <div style="display:grid; grid-template-columns: 260px 1fr; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--c-border);">
+          <span style="font-family:'DejaVu Sans Mono'; font-size: 30px; color: var(--c-teal-3); letter-spacing: 0.02em;">ONNX Runtime</span>
+          <span style="font-size: 26px; color: var(--c-off); font-weight: 300; line-height: 1.4;">formato común · portable entre frameworks.</span>
+        </div>
+        <div style="display:grid; grid-template-columns: 260px 1fr; align-items: baseline; padding: 22px 0;">
+          <span style="font-family:'DejaVu Sans Mono'; font-size: 30px; color: var(--c-teal-3); letter-spacing: 0.02em;">llama.cpp/ Ollama</span>
+          <span style="font-size: 26px; color: var(--c-off); font-weight: 300; line-height: 1.4;">desplegar modelos de lenguaje capaces de correr sin GPU.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 18 — SECTION 04
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide section-starter">
+  <div>
+    <div class="sec-foot">
+</div>
+    <div class="sec-num">04</div>
+  </div>
+  <div>
+    <div class="sec-rule"></div>
+    <div class="sec-name">Casos de Uso.</div>
+    <p class="body-lead" style="margin-top: 40px; color: var(--c-teal-200); max-width: 1300px;">Dónde se está desplegando IA en el borde, hoy mismo.&nbsp;</p>
+  </div>
+  <div class="sec-foot" style="display:flex; justify-content:space-between;">
+    <span></span>
+    <span>17 / 21</span>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 19 — INDUSTRIAL
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 04 · casos ]</span>
+    <span>
+</span>
+  </div>
+
+  <div class="eyebrow">caso 01 · planta de producción</div>
+  <h2 class="slide-title">Industria 4.0.</h2>
+
+  <div style="position:absolute; top:140px; right:var(--pad-x); width:520px; border-top:3px solid var(--c-lime); z-index:2;">
+    <img src="assets/pcb-detection.png" alt="Inspección de PCB con visión por computadora" style="display: block; width: 450px; height: 400px">
+  </div>
+
+  <p class="body-lead" style="max-width: 1100px; margin-bottom: 50px;">Las plantas no pueden esperar 250 ms a un data center. Una línea de producción decide en milisegundos.</p>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 36px; flex:1;">
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom: 24px;">[ aplicación · 01 ]</div>
+      <h4 style="font-size: 40px;">Detección de anomalías</h4>
+      <p style="font-size: 26px; color: var(--c-off); line-height: 1.4; margin: 0; font-weight: 300;">Sensores de vibración, corriente o temperatura corren modelos locales. Una desviación dispara la alerta antes de que la línea se detenga.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom: 24px;">[ aplicación · 02 ]</div>
+      <h4 style="font-size: 40px;">Visión para calidad</h4>
+      <p style="font-size: 26px; color: var(--c-off); line-height: 1.4; margin: 0; font-weight: 300;">Cámaras inspeccionan cada pieza en la banda. Defectos detectados al instante; el rechazo es físico, no un reporte de la próxima semana.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom: 24px;">[ aplicación · 03 ]</div>
+      <h4 style="font-size: 40px;">Mantenimiento predictivo</h4>
+      <p style="font-size: 26px; color: var(--c-off); line-height: 1.4; margin: 0px; font-weight: 300;">El gateway escucha el motor 24/7. Cuando el sonido sea diferente, agenda servicio antes del paro forzado.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 20 — ESPACIOS INTELIGENTES
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 04 · casos ]</span>
+    <span></span>
+  </div>
+
+  <div class="eyebrow">caso 02 · edificios y oficinas</div>
+  <h2 class="slide-title">Espacios inteligentes.</h2>
+
+  <div style="position:absolute; top:140px; right:var(--pad-x); width:520px; border-top:3px solid var(--c-lime); z-index:2;">
+    <img src="assets/heatmap.png" alt="Heatmap de ocupación de un piso" style="display: block; width: 100%; height: 450px">
+  </div>
+
+  <p class="body-lead" style="max-width: 1100px; margin-bottom: 50px;">Un edificio que ve y entiende a las personas, sin que un solo fotograma de video salga de él.</p>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 36px; flex:1;">
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom: 24px;">[ aplicación · 01 ]</div>
+      <h4 style="font-size: 40px;">Ocupación y flujo</h4>
+      <p style="font-size: 26px; color: var(--c-off); line-height: 1.4; margin: 0; font-weight: 300;">Cámaras locales cuentan personas, miden permanencia y mapean recorridos. Sólo los números agregados salen del dispositivo.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom: 24px;">[ aplicación · 02 ]</div>
+      <h4 style="font-size: 40px;">Seguridad sin nube</h4>
+      <p style="font-size: 26px; color: var(--c-off); line-height: 1.4; margin: 0px; font-weight: 300;">Detección de eventos sospechosos directamente en la cámara. El video crudo nunca se sube, sólo el evento si lo hay.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom: 24px;">[ aplicación · 03 ]</div>
+      <h4 style="font-size: 40px;">Climatización adaptativa</h4>
+      <p style="font-size: 26px; color: var(--c-off); line-height: 1.4; margin: 0; font-weight: 300;">Iluminación y HVAC reaccionan a presencia y actividad real, no a horarios fijos. Consumo energético baja de forma medible.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 21 — CASAS INTELIGENTES
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide dotgrid">
+  <div class="chrome-top">
+    <span class="left">[ 04 · casos ]</span>
+    <span></span>
+  </div>
+
+  <div class="eyebrow">caso 03 · casas y home assistant</div>
+  <h2 class="slide-title" style="max-width: 1100px;">Casas inteligentes, sin cerebro en otro continente.</h2>
+
+  <div style="position:absolute; top:140px; right:var(--pad-x); width:600px; border-top:3px solid var(--c-lime); z-index:2;">
+    <img src="assets/homeassistant.png" alt="Dashboard de Home Assistant" style="display:block; width:100%; height:auto;">
+  </div>
+
+  <p class="body-lead" style="max-width: 1100px; margin-bottom: 36px;">El movimiento <span class="accent">self-hosted:&nbsp;</span>Home Assistant, ESPHome, asistentes locales, permiten crear infraestructuras completas en tu casa</p>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 36px; flex:1;">
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom: 24px;">[ aplicación · 01 ]</div>
+      <h4 style="font-size: 40px;">Asistente de voz local</h4>
+      <p style="font-size: 26px; color: var(--c-off); line-height: 1.4; margin: 0; font-weight: 300;">Wake-word, transcripción y comandos corren en hardware como el XIAO ESP32-S3 Sense. Tu voz no se sube a ningún servidor.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom: 24px;">[ aplicación · 02 ]</div>
+      <h4 style="font-size: 40px;">Automatización</h4>
+      <p style="font-size: 26px; color: var(--c-off); line-height: 1.4; margin: 0; font-weight: 300;">Las rutinas se ejecutan en el hub local. Si internet cae, las luces, persianas y termostato siguen respondiendo.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--c-lime);">
+      <div class="tag-mono" style="margin-bottom: 24px;">[ aplicación · 03 ]</div>
+      <h4 style="font-size: 40px;">Independencia del proveedor</h4>
+      <p style="font-size: 24px; color: var(--c-off); line-height: 1.4; margin: 0; font-weight: 300;">Si la marca cierra el servicio o cambia los términos, tu casa sigue funcionando. La inteligencia es tuya, no rentada.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     SLIDE 22 — CLOSING / GRACIAS
+═══════════════════════════════════════════════════════════════════════ -->
+<section class="slide closing" data-deck-last-visible="">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+    <div style="font-family:'DejaVu Sans Mono'; font-size: 24px; color: var(--c-bg-deep); letter-spacing: 0.16em;">
+</div>
+    <div style="font-family:'Space Grotesk'; font-size: 30px; font-weight: 700; letter-spacing: -0.01em;">
+<span style="font-family:'DejaVu Sans Mono'; font-size:24px;"></span></div>
+  </div>
+
+  <div style="margin-top: 50px;">
+    <h2>La IA regresa a casa<span style="color:#161a2e;">_</span></h2>
+    <div class="lead" style="">El futuro de la inteligencia artificial no es más nube es más cerca, más rápido, más privado. <strong style="font-weight:700;">Local.</strong></div>
+  </div>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 50px;">
+    <div>
+      <div style="font-family:'DejaVu Sans Mono'; font-size:24px; color:var(--c-bg-deep); opacity:0.65; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom:14px;">
+</div>
+      <div style="font-family:'Space Grotesk'; font-size: 34px; font-weight: 600; line-height: 1.25; color: var(--c-bg-deep);"></div>
+    </div>
+    <div>
+      <div style="font-family: &quot;DejaVu Sans Mono&quot;; font-size: 24px; color: var(--c-bg-deep); opacity: 0.65; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 14px;"><br></div>
+      <div style="font-family: &quot;Space Grotesk&quot;; font-size: 34px; font-weight: 600; line-height: 1.25; color: var(--c-bg-deep);"><br></div>
+    </div>
+  </div>
+
+  <div class="foot" style="margin-top: auto; padding-top: 40px;">
+    <div>
+      <div style="font-size:24px; opacity:0.6; letter-spacing:0.22em; text-transform:uppercase; margin-bottom:8px;">
+</div>
+      <div style="font-size: 32px; font-weight: 700;">Contacto: alejandro@inteligencia.tech    www.youtube.com/amptech</div>
+    </div>
+    <div style="text-align:right; font-size:24px;">
+<div class="closing-sponsors" style="display:inline-flex; flex-direction:column; background:#ffffff; border-top:3px solid #161a2e; padding:12px 22px 14px; box-sizing:border-box; text-align:left; transform:translateY(-1px);">
+  <div style="font-family:'DejaVu Sans Mono', monospace; font-size:18px; letter-spacing:0.22em; text-transform:uppercase; color:#4a5364; margin-bottom:10px;">
+</div>
+  <div style="display:flex; align-items:center; gap:0;">
+    <div style="padding:4px 22px; height:68px; display:flex; align-items:center; justify-content:center;"><img src="assets/sponsor-uam.png" alt="UAM" style="display:block; height:100%; width:auto; max-width:120px; object-fit:contain;"></div>
+    <div style="padding:4px 22px; height:68px; display:flex; align-items:center; justify-content:center; border-left:1px solid #d6dae3;"><img src="assets/sponsor-ag.png" alt="AG Electrónica" style="display:block; height:100%; width:auto; max-width:140px; object-fit:contain;"></div>
+    <div style="padding:4px 22px; height:68px; display:flex; align-items:center; justify-content:center; border-left:1px solid #d6dae3;"><img src="assets/sponsor-seeed.jpg" alt="Seeed Studio" style="display:block; height:100%; width:auto; max-width:200px; object-fit:contain;"></div>
+  </div>
+</div>
+</div>
+  </div>
+</section>
+
+</deck-stage>
+
+<script src="deck-stage.js"></script>
+
+
+<script>
+(async () => {
+  try { await customElements.whenDefined('deck-stage'); } catch (e) {}
+  const ds = document.querySelector('deck-stage');
+  if (ds) {
+    // Weigh only slide children — same filter as deck-stage.length. Skipping
+    // slotted script/style/template keeps inline Babel/CSS from registering
+    // as stable "content" before the framework has mounted anything.
+    const weigh = () => {
+      let text = 0, media = 0;
+      for (const c of ds.children) {
+        const t = c.tagName;
+        if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+        text += (c.textContent || '').trim().length;
+        media += c.querySelectorAll('img,svg,canvas,video').length;
+      }
+      return text + media * 100;
+    };
+    const deadline = Date.now() + 15000;
+    let last = -1, stable = 0;
+    while (Date.now() < deadline) {
+      const n = weigh();
+      if (n > 0 && n === last) { if (++stable >= 2) break; } else { stable = 0; }
+      last = n;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+  try { await document.fonts.ready; } catch (e) {}
+  setTimeout(() => { try { window.print(); } catch (e) {} }, 200);
+})();
+</script>
+</body></html>
